@@ -1,92 +1,39 @@
-#Before you can run this script you must open your files in openchrom, right 
-#click on chromatogram, and export chromatogram as a .csv with a name you'll know 
-#Put all relevant ones in a folder. That will be part of the input. 
 
+#If your first time running this script, ensure the 3 packages 
+#below are installed. can uncomment below to install them. 
 
-
-#General notes / descrigption in the brackets below (Probably read if new to R):
-{
-  # The point of this script is to automate the hard part of coding out publication
-  # quality chromatography and spectra figures. To use this you only need to fill out
-  # the variables before the 'ignorable part'.
-                                                             
-}
-
-
-#If your first time running this script you need to run the following lines..
-#only first time though. To run them remove the # symbol in front, go to the 
-#line and hit run above. After that I recommend adding the # back to comment code lines out again
 # install.packages("tidyverse")
 # install.packages("ggplot2")
 # install.packages("scales")
 
-#Before you start: 
-#Take your desired GCMS data youd like to plot and open it in OpenChrom
-# right click on the individual chromatogram > export chromatogram > export as .csv
-# Transfer your relevant file(s) to a folder and be sure to name the files  
-# something that you want it to be indicated as on the plot
+#-------------------------- Inputs -----------------------------
+Filefolder <- 'C:/MSU/Mass Spec and FID/NiceFigures/CYP736_Promiscious_Activities/' #Folder where .csv's are located
 
-###Criteria for you to input
-
-# Where is your file located pathwise? Be sure path names have a /  and not  \
-Filefolder <- 'C:/MSU/Mass Spec and FID/NiceFigures/CYP736_Promiscious_Activities/CfTPS2Tests/'
-
-#Using the files.csv within your Filefolder input the file(s) you want to plot (no extension)
-#After each file (- extension) separate by comma, then do the ion (or TIC). You can add other 
-#chromatograms by repeating this. The First listed/top in the list is the top chromatogrma listed. 
-
-YourPlot <- c('20240809_4-12-24_Deriv21','144',
-              '20240809_4-12-24_Deriv11','144',
-              '20240809_4-12-24_Deriv7','144',
-              '20240809_7-18-24_Deriv1','144'
+#First file is top listed chromatogram. comma to TIC or ion to plot. new comma to start list next item
+#easy to distinguish with new lines. Make sure comma no in any loops
+YourPlot <- c('20240307_8_ArTPS2_SsSS','TIC',
+              '20240307_1_DXS-GGPPS','TIC',
+              '20240307_2_ArTPS2','TIC',
+              '20240307_3_CamTPS2','TIC'
 )
 
+Relative_OrAbsolute <- 'Relative' #Unless you want counts, do relative
 
-#If you are plotting the Raw data (absolute intensity)
-#Or are you plotting the relative abundances 
-Relative_OrAbsolute <- 'Relative'
+VerticalSampleOffset <- 0.11 #How big of a gap between
+HorizontalSampleOffset <- 0 # How much (time) to shift each additional stacked chromatogram by
 
-#On stacked chromatograms can add separation with this number. 
-#Note: if you do relative the y axis scale is 0-1, but absolute intensity is 
-#the counts of each ion. That can easily be 10000000 to 1000000000
-#At least put 0 for this value. 
+xrange <- c(10, 16) #Pick x-axes range
+yrange <- c(0,1.3)  #if relative plot 0-1 or higher if stacking chroms
 
-VerticalSampleOffset <- 0.11
+TickTimeGap <- 1  #Time gap between x-axis ticks
+Legend_WrapAmount <- 20  #How many characters before Legend goes to new line
 
-#This is useful for if you are trying to offset chromatograms for a stacked one. 
-HorizontalSampleOffset <- 0.15
+LineColors <- c('red','orange','green','blue') #Put in order of YourPlot variable. For pretty hexadecimals https://coolors.co/156064-00c49a-f8e16c-ffc2b4-fb8f67
 
+ChromLineWidth <- 0.5 #How wide do you want your line? 
 
+IncludeBorder <- 'no'  #Do you want box around plot?
 
-#The window range you are plotting.
-#Like before, Relative or absolute makes yrange height vary a lot more. 
-
-xrange <- c(13, 15.75) #13.75
-yrange <- c(0,1.3)
-
-#Time Gap between your tick lines.. aka if you want a line every minute, set it to 1. if you want every half a minute set to 0.5
-TickTimeGap <- 0.5
-
-#If you have a long file/condition name, you can have it go to new lines
-#this variable is an integer that says when you want it to go to new line
-Legend_WrapAmount <- 20
-
-#Where you want vertical line, What kind, what color, and thickness
-#line options are twodash, longdash, dotted, dotdash, dashed, blank
-NewVerticalLine <- c(15, 'blank', 'black', 2)
-
-
-#Put in order of black chromatogram. For pretty hexadecimals https://coolors.co/156064-00c49a-f8e16c-ffc2b4-fb8f67
-LineColors <- c('black','black','black','black','black', 'black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black')
-
-#How wide do you want your line? 
-ChromLineWidth <- 0.3
-
-#Do you want a border around your plot? if you do answer Yes. if not put No
-IncludeBorder <- 'No'
-
-#---------- Use for both ------------------
-#axes size stuff
 xaxesLabelSize <- 14
 yaxesLabelSize <- 14
 xaxesNumberSize <- 14
@@ -94,19 +41,11 @@ yaxesNumberSize <- 10
 LegendTitleSize <- 15
 LegendTextSize <- 12
 
+plotdim <- c(8,5)  # Final Figure dimensions. Printed in R is not final dimensions so please check
 
-#Plot size/dimension info
-plotdim <- c(8,5)
+plotname <- 'TEST.png' #be sure to include the type of pic (.jpg .png, .svg)
 
-#be sure to include the type of pic (.jpg .png, .svg)
-plotname <- 'TEST.png'
-
-
-
-#To run everything now, hit the Source button above, or cntrl + A to highlight everything 
-#and then hit run. 
-
-
+#Hit Source to run everything 
 
 ###############################################################################
 ########################## Internal Code ######################################
@@ -261,7 +200,16 @@ require('scales')
   tempCombinedPlotData <- tibble()
   
   #
-  FinalCombinedPlotData$Chromatogram <- factor(FinalCombinedPlotData$Chromatogram, levels = PlotTbl$Combo)
+  
+  
+  #New Stuff:
+  PlotTbl2 <- PlotTbl %>% rename(Chromatogram = Combo)
+  FinalCombinedPlotData$Chromatogram <- factor(FinalCombinedPlotData$Chromatogram, levels = PlotTbl2$Chromatogram)
+  
+  NamedColors <- setNames(LineColors[1:nrow(PlotTbl2)], levels(FinalCombinedPlotData$Chromatogram))  
+ 
+  
+  identical(levels(FinalCombinedPlotData$Chromatogram), names(NamedColors))  # should be TRUE
   
   #################################################################################
   #################################################################################
@@ -276,13 +224,13 @@ require('scales')
     Yaxis <- 'Absolute_Intensity'
   }
   
-  
+  wrapped_labels <- str_wrap(levels(FinalCombinedPlotData$Chromatogram), Legend_WrapAmount)
   xrange
   Plot <- FinalCombinedPlotData %>% filter(minutes >= xrange[1] & minutes <= xrange[2]) %>%
     ggplot() +
-    geom_line(mapping = aes(x = minutes, y = get(Yaxis), color = str_wrap(Chromatogram, Legend_WrapAmount)), lwd = ChromLineWidth) +
+    geom_line(mapping = aes(x = minutes, y = get(Yaxis), color = Chromatogram), lwd = ChromLineWidth) +
     ylim(c(yrange[1], yrange[2])) +
-    ylab('Intensity')+
+    ylab('Intensity') +
     scale_x_continuous(limits = c(xrange[1], xrange[2]), breaks = seq(from = omnibus::roundTo(xrange[1],TickTimeGap), to = omnibus::roundTo(xrange[2],TickTimeGap), by = TickTimeGap)) +
     theme(panel.background = element_blank(),
           axis.text.x = element_text(size = xaxesNumberSize),
@@ -299,7 +247,7 @@ require('scales')
           #  legend.box.background = element_rect(fill='transparent') #transparent legend panel
           legend.title = element_text(size =LegendTitleSize),
     ) +
-    scale_color_manual('Chromatogram', values = LineColors) +
+    scale_color_manual('Chromatogram', values = NamedColors, labels = wrapped_labels)
 
     
     if(IncludeBorder == 'Yes' | IncludeBorder == 'yes' | IncludeBorder == 'Y'){
