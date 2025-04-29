@@ -277,8 +277,9 @@ require('scales')
   }
   
   
-  
-  Plot <- FinalCombinedPlotData %>% ggplot() +
+  xrange
+  Plot <- FinalCombinedPlotData %>% filter(minutes >= xrange[1] & minutes <= xrange[2]) %>%
+    ggplot() +
     geom_line(mapping = aes(x = minutes, y = get(Yaxis), color = str_wrap(Chromatogram, Legend_WrapAmount)), lwd = ChromLineWidth) +
     ylim(c(yrange[1], yrange[2])) +
     ylab('Intensity')+
@@ -299,17 +300,15 @@ require('scales')
           legend.title = element_text(size =LegendTitleSize),
     ) +
     scale_color_manual('Chromatogram', values = LineColors) +
-    # plot.background = element_rect(fill = "transparent",colour = NA)
-    #scale_color_hue(c=100, l=40)
+
     
     if(IncludeBorder == 'Yes' | IncludeBorder == 'yes' | IncludeBorder == 'Y'){
       Plot <- Plot + 
         theme(panel.border = element_rect(color = 'black', fill = NA))
     }
   
-  Plot
+  print(Plot)
   ggsave(plotname, plot = Plot, width = plotdim[1], height = plotdim[2], bg = 'transparent' )
-  
   
   
 
