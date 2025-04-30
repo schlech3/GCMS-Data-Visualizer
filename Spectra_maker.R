@@ -39,88 +39,24 @@
 ###Criteria for you to input
 
 # Where is your file located pathwise? Be sure path names have a /  and not  \
-Filefolder <- 'C:/MSU/Mass Spec and FID/NiceFigures/CYP736_Promiscious_Activities/CfTPS2Tests/'
+Filefolder <- 'C:/MSU/Mass Spec and FID/NiceFigures/CYP736_Promiscious_Activities/'
+
+SampleName <- '20240307_8_ArTPS2_SsSS' #Which Sample (no .csv) are you looking to do?
 
 
-file.choose()
-#Try File.choose()
-
-#If you filled out Spectra do the below otherwise you can leave as is:
-#--------------------------------------------------------------------------------
-#Which Sample (no .csv) are you looking to do?
-SampleName <- '20240307_1_GGPPS'
-
-#What time (in minutes) are you trying to plot the spectra for? Be as specific as you can for accuracy
-PeakTime <- 15.749
-
-#X axis to look at
-IonRange <- c(40, 320)
-#Ions aren't labeled at the top by default. Type the ones you want
-IonsToLabel <- c(41,55,67,79,95,107,123,135,149,163,175,191,205,217,233,247,259,269,287, 302)
-#The labeles above a given ions respective size
-IonLabelSize <- 4
-#If you want thicker or thinner lines change these values
-SpectraLineWidth <- 0.6
-#----------------------------------------------
-
-#If you are doing Chromatograms fill out the below:
-
-#Using the files.csv within your Filefolder input the file(s) you want to plot (no extension)
-#After each file (- extension) separate by comma, then do the ion (or TIC). You can add other 
-#chromatograms by repeating this. The First listed/top in the list is the top chromatogrma listed. 
-
-YourPlot <- c('20240809_4-12-24_Deriv21','144',
-              '20240809_4-12-24_Deriv11','144',
-              '20240809_4-12-24_Deriv7','144',
-              '20240809_7-18-24_Deriv1','144'
-)
+PeakTime <- 15.749 #What time (in minutes) are you trying to plot the spectra for? Be as specific as you can for accuracy
 
 
-#If you are plotting the Raw data (absolute intensity)
-#Or are you plotting the relative abundances 
-Relative_OrAbsolute <- 'Relative'
+IonRange <- c(40, 320) #X axis to look at
+yrange <- c(0,1.25E5)     #Change why  axis ranges
 
-#On stacked chromatograms can add separation with this number. 
-#Note: if you do relative the y axis scale is 0-1, but absolute intensity is 
-#the counts of each ion. That can easily be 10000000 to 1000000000
-#At least put 0 for this value. 
+IonsToLabel <- c(41,55,67,79,95,107,123,135,149,163,175,191,205,217,233,247,259,269,287, 302) #Ions aren't labeled at the top by default. Type the ones you want
 
-VerticalSampleOffset <- 0.11
+IonLabelSize <- 4 #The labeles above a given ions respective size
 
-#This is useful for if you are trying to offset chromatograms for a stacked one. 
-HorizontalSampleOffset <- 0.15
+SpectraLineWidth <- 0.6  #If you want thicker or thinner lines change these values
 
 
-
-#The window range you are plotting.
-#Like before, Relative or absolute makes yrange height vary a lot more. 
-
-xrange <- c(13, 15.75) #13.75
-yrange <- c(0,1.3)
-
-#Time Gap between your tick lines.. aka if you want a line every minute, set it to 1. if you want every half a minute set to 0.5
-TickTimeGap <- 0.5
-
-#If you have a long file/condition name, you can have it go to new lines
-#this variable is an integer that says when you want it to go to new line
-Legend_WrapAmount <- 20
-
-#Where you want vertical line, What kind, what color, and thickness
-#line options are twodash, longdash, dotted, dotdash, dashed, blank
-NewVerticalLine <- c(15, 'blank', 'black', 2)
-
-
-#Put in order of black chromatogram. For pretty hexadecimals https://coolors.co/156064-00c49a-f8e16c-ffc2b4-fb8f67
-LineColors <- c('black','black','black','black','black', 'black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black')
-
-#How wide do you want your line? 
-ChromLineWidth <- 0.3
-
-#Do you want a border around your plot? if you do answer Yes. if not put No
-IncludeBorder <- 'No'
-
-#---------- Use for both ------------------
-#axes size stuff
 xaxesLabelSize <- 14
 yaxesLabelSize <- 14
 xaxesNumberSize <- 14
@@ -140,7 +76,15 @@ plotname <- 'TEST.png'
 #To run everything now, hit the Source button above, or cntrl + A to highlight everything 
 #and then hit run. 
 
+#Hit Source to run everything 
 
+###############################################################################
+########################## Internal Code ######################################
+###############################################################################
+
+require("tidyverse")
+require("ggplot2")
+require('scales')
 
 
 
@@ -155,22 +99,29 @@ setwd(Filefolder)
   # RT(minutes)NOT USED BY IMPORT to minutes. 
   # lastly I create a new column that is a sum of the ions aka the TIC. 
 }
+
+SampleFile <- paste(SampleName, ".csv", sep = '')
+
 read_plus <- function(flnm) {
-  read_csv(flnm) %>% 
-    mutate(filename = flnm) %>% 
-    relocate(filename) %>% 
-    rename(minutes = `RT(minutes) - NOT USED BY IMPORT`) %>% 
-    rename(milliseconds = `RT(milliseconds)`)
-  
-  
+  print(flnm)
+  suppressMessages(
+    read_csv(flnm) %>% 
+      mutate(filename = flnm) %>% 
+      relocate(filename) %>%
+      rename(minutes = `RT(minutes) - NOT USED BY IMPORT`) %>% 
+      rename(milliseconds = `RT(milliseconds)`)
+  )
 }
 
-
-#this will then look in the folder you set and then using the made function above make 1 big dataframe
-Myfiles <-
-  list.files(pattern = "*.csv", 
-             full.names = T) %>% 
+# Build full paths only for files that match
+Myfiles <- 
+  list.files(pattern = "*.csv", full.names = TRUE) %>%
+  keep(~basename(.) == SampleFile) %>%
   map_df(~read_plus(.))
+
+
+
+
 
 
 
@@ -178,7 +129,6 @@ Myfiles <-
 Myfiles %>% mutate(filename = str_sub(filename, start = 3L, end = -5L)) %>%
   filter(filename == SampleName) %>%
   filter(abs(PeakTime - minutes) == min(abs(PeakTime - minutes)))
-
 
 
 IonPlotData <- Myfiles %>% mutate(filename = str_sub(filename, start = 3L, end = -5L)) %>% filter(filename == SampleName) %>% 
@@ -193,7 +143,8 @@ Plot <- IonPlotData %>% ggplot(mapping = aes(x = `m/z`, y = Intensity) ) +
         axis.title.x = element_text(size = xaxesLabelSize),
         axis.title.y = element_text(size = yaxesLabelSize))+
   xlim(IonRange) +
+  ylim(yrange[1], yrange[2]) +
   geom_text(aes(label=ifelse( `m/z` %in% IonsToLabel, `m/z`, NA ) ), position=position_dodge(width=0.9), vjust=-1.2, size = IonLabelSize)
-Plot
+
+print(Plot)
 ggsave(plotname, plot = Plot, width = plotdim[1], height = plotdim[2] )
-}

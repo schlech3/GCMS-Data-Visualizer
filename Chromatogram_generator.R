@@ -112,7 +112,6 @@ require('scales')
     #this is also pull out only the files and ions you chose at the top along with filename and time columns
   }
   
-  
   DesiredIonFileData <- Myfiles %>% mutate(filename = str_sub(filename, start = 3L, end = -5L)) %>%
     filter(filename %in% PlotTbl$Sample ) %>%
     group_by(filename) %>%
@@ -128,6 +127,7 @@ require('scales')
     #First I assign a new DesiredIonFileData before the loop just because it has to overwrite itself,
     #and I'd prefer not to overwrite the original DesiredIonFileData
     }
+  
   DesiredRelativeIonFileData <- DesiredIonFileData %>% ungroup(filename)
   
   for(i in IonsToPlot){
@@ -141,11 +141,6 @@ require('scales')
     
     DesiredRelativeIonFileData <- cbind(TempRelative, DesiredRelativeIonFileData)
   }
-  
-  
-  
-  #######################
-  
   
   #Step 6: Using YourPlot to pull out the exact data to plot
   {
@@ -165,13 +160,10 @@ require('scales')
     select(!IonsToPlot)
   
   
-  #Step 7: 
+  #Step 7 pivot_longer data: 
   DesiredIonFileDataLong <- DesiredIonFileData %>% pivot_longer(cols = c(IonsToPlot), names_to = 'Ion', values_to = 'Absolute_Intensity' )
   
   CombinedPlotData2 <- left_join(CombinedPlotData,DesiredIonFileDataLong) 
-  
-  
-  
   
   #Step 8: Adjusting the % relative to offset the data. 
   {
@@ -199,18 +191,12 @@ require('scales')
   FinalCombinedPlotData <- tempCombinedPlotData
   tempCombinedPlotData <- tibble()
   
-  #
-  
-  
-  #New Stuff:
   PlotTbl2 <- PlotTbl %>% rename(Chromatogram = Combo)
   FinalCombinedPlotData$Chromatogram <- factor(FinalCombinedPlotData$Chromatogram, levels = PlotTbl2$Chromatogram)
   
   NamedColors <- setNames(LineColors[1:nrow(PlotTbl2)], levels(FinalCombinedPlotData$Chromatogram))  
  
-  
-  identical(levels(FinalCombinedPlotData$Chromatogram), names(NamedColors))  # should be TRUE
-  
+
   #################################################################################
   #################################################################################
   ##############################FINAL PLOTTING BELOW! #############################
