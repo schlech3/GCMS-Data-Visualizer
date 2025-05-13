@@ -136,14 +136,17 @@ chrom_stack_adjuster <- function(data, tbl, VerticalSampleOffset, HorizontalSamp
   tbl <- tbl %>%
     mutate(sample = sub("\\.[^.]+$", "", sample))  # remove extensions from user input
   
+  #lookup order
+  sample_order <- tbl %>%
+    distinct(sample) %>%
+    mutate(offset_index = row_number() - 1)
+  
   data %>%
-    left_join(tbl, by = "sample") %>%
-    group_by(sample) %>%
+    left_join(sample_order, by = "sample") %>%
     mutate(
-      rt = rt + HorizontalSampleOffset * (as.numeric(factor(sample)) - 1),
-      Intensity = Intensity + VerticalSampleOffset * (as.numeric(factor(sample)) - 1)
-    ) %>%
-    ungroup()
+      adj_rt = rt + HorizontalSampleOffset * offset_index,
+      adj_Intensity = Intensity + VerticalSampleOffset * offset_index
+    )
 }
 
 
@@ -199,18 +202,36 @@ ms_data3 %>%
 
 
 
+
 VerticalSampleOffset <- 0.11 #How big of a gap between
 HorizontalSampleOffset <- 0 # 
 
 
-YourPlot$sample <- factor(YourPlot$sample)
+ms_data3.0 <- ms_data3
+
+ms_data3.0$sample <- factor(ms_data3$sample, levels = strip_extension(YourPlot$sample))
+nlevels(ms_data3.0$sample)
+
+
+YourPlot
+ms_data3.0
+ms_data3.0
+levels(ms_data3.0$sample)
+
+
 
 VerticalSampleOffset <- 0.11 #How big of a gap between
 HorizontalSampleOffset <- 0.4
-ms_data4 <- chrom_stack_adjuster(ms_data3, YourPlot, VerticalSampleOffset, HorizontalSampleOffset)
+ms_data4 <- chrom_stack_adjuster(ms_data3.0, YourPlot, VerticalSampleOffset, HorizontalSampleOffset)
+
+ms_data4
+
+
+ms_data4 %>% mutate(IsDiff = adj_rt == rt) %>% select(IsDiff) %>% unique()
+
 
 ms_data4 %>%
-  ggplot(aes(x = rt, y = Intensity, color = sample)) +
+  ggplot(aes(x = adj_rt, y = adj_Intensity, color = sample)) +
     geom_line()
 
 
