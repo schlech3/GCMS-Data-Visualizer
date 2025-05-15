@@ -1,0 +1,66 @@
+ Critical RunStart CP Variables
+ 
+CP Variable  = Value
+
+  Front Injector Available(_locfrontavail) = 0
+   Rear Injector Available(_locRearavail) = 0
+   Dual Injector Available(_Dualavail) = 0
+ 
+ Injection Source(_injsource) = 5  1,2,3,4,5,6=ALS,Man,Valve,Ext.,PAL,HS
+         _injloc (_injloc) = 1
+       MSD Sample(_msinlet) = 1  1,2=sample1=Front,sample2=Rear
+ 
+  _ptavail :  0  _dopretreat :  0  _pretreatpath$ :  c:\msdchem\1\Pretreat\  
+              _pretreatfile$ :    _pretreatmeth$ :  
+ 
+  _Overlapped _overlap  _ALSNEXT, _ALSNEXT2, _Lastlap  0 0 21 21 0
+
+_overlapped: Is method currently overlapping?  0
+_overlap:    Is hw capable of overlapping?     0
+_alsnext:              Next vial front inlet?  21
+_lastlap:   Indicator for last entry in SLT   0
+ 
+ _seqcheckbar:  0  On Mismatch, Inject Anyway
+ _seqcheckbarnext:  0
+  Expected BCs   :    2: 
+ 
+  Next Expected BCs   :    2: 
+ 
+ Previous _checkbar   :  0
+ Previous _barmismatch:  0
+ 
+_maxvial[]  1=54  2=54  3=54  4=54  5=54  6=54  7=54  8=54  9=0  
+
+ Traypicked:  Stk1-01
+      Trays:  1 = Stk1-01 2 = Stk1-02 3 = Stk1-03 4 = Stk1-04 5 = Stk2-01 6 = Stk2-02 7 = Stk2-03 8 = Stk2-04 
+Front Sample
+ 
+     Alsbottle (_alsbottle) = 20
+      Methfile (_methfile$) = NICK_30MVF5_TERPENE_CASEY_SCAN40_450_0SPL_21MIN.M
+      Datafile(,_datafile$) = 20230701_5-26-23_NBenthi_19.D
+   Sample Name (_dataname$) = 5-26-23_NBenthi_19
+  Exp. Barcode(_expbarcode$)= 
+ Miscellaneous (_miscinfo$) = 
+ Vol. Override    (_injvol) = 0
+ Method Volume   (_methvol) = 1
+ SyringeVolume    (_syrvol) = 10
+ SyringeVolLow (_syrvollow) = 0
+    Multiplier  (_multiplr) = 1
+    Sample Amt   (_sampamt) = 0
+ 
+ 
+Rear Sample
+ 
+     Alsbottle(_alsbottle2) = 0
+      Datafile(_datafile2$) = 20230701_5-26-23_NBenthi_19.D
+   Sample Name(_dataname2$) = 5-26-23_NBenthi_19
+  Exp. Barcode(_expbarcode2$) = 
+ Miscellaneous(_miscinfo2$) = 
+ Vol. Override(_injvol2) = 0
+ Method Volume(_methvol2) = 1
+ SyringeVolume(_syrvol2) = 10
+ SyringeVolLow(_syrvollow2) = 0
+    Multiplier(_multiplr2) = 1
+    Sample Amt(_sampamt2) = 0
+
+Sun Jul 02 00:38:36 2023

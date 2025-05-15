@@ -1,0 +1,20 @@
+STATE:|F60|W13|S30|L40 (auto)|M450|D-1|TY0|RE0|DL2|PS1|RN0|FLC:\Science_Software\AMDIS32\ONSITE.MSL|mI0|sH1|dL2|sS0|tH0|rB1
+|HD6-7-23_NBenthi_02::::Agilent A::2 Jul 23   4:12 am|FIC:\MSU\CODING\STACKED_CHROMATOGRAM_GENERATOR\EXAMPLE_DATA\DXSGGPPS_CAMTPS2V2.D\DATA.MS
+NOISE: K=17.62 %1=1 MinAb=1 LoHi=40:450 Xnz=6 pk/u=0.901 SumAb=1.05e+010 Nulls=0 %Bad=14 Uncrt=25 S=238
+LAST: |EL87|NC80  	TotTM=21.5                                                      
+0 Identified Compounds
+
+
+QA/QC:
+Instrument type: Quadrupole
+Scan Direction High to Low
+High noise level. Median Signal(Noise Level)/Threshold=6.4.
+Too many non-integral m/z peaks (25%). Electron multiplier/tuning problem?
+Background (low vs. high retention time):
+  median low RT S/N=55, high RT S/N=104
+Solvent Tailing (m/z 84). Run begins at 4.09 min. Solvent falls below:
+  S/N=5 before run
+  S/N=2 at 4.72 min.
+  S/N=1 at 8.73 min.
+Column Bleed (m/z 207):
+  median low RT S/N=5, high RT S/N=36
