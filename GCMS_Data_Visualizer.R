@@ -3,13 +3,11 @@ require(tidyverse)
 require(scales)
 require(ncdf4)
 
-InputFileFolder <- 'C:/MSU/Coding/Stacked_Chromatogram_Generator/Example_Data/'    #Folder where .csv's are located
+# >>>>>>>>>>>>>>>>>>> File inputs and Outputs <<<<<<<<<<<<<<<<<<<<<
 
-plotname <- 'Example4_VertHoriz_BKs.png'                               #Name the file. please include the type of file (.jpg .png, .svg). It will save in the same  Filefolder as input data.
-OutputFileFolder <- 'C:/MSU/Coding/Stacked_Chromatogram_Generator/Example_Data/'    #Folder where .csv's are located
+InputFileFolder <- 'C:/Path/to/your/data/'    #Folder where .csv's are located
 
-Process_Data <- TRUE         #If you are just finnicking with Plot parameters, set to FALSE to not have long wait period
-
+#These are your files and relevant ions to plot
                     #FileName,     #TIC/EIC mz,    +/- value i.e. ion = 40 RANGE = 0.5 aka 40 +/- 0.5. NA if TIC
 YourPlot <- tribble(~sample,       ~ion,           ~RANGE,   #Do not edit the  line
                     'DXSGGPPS_ArTPS2_AjReCYP76BK1.D', 'TIC', 'NA',
@@ -24,6 +22,15 @@ YourPlot <- tribble(~sample,       ~ion,           ~RANGE,   #Do not edit the  l
                     'DXSGGPPS_ArTPS2.D', 'TIC', 'NA'
 )
 
+OutputFileFolder <- 'C:/Path/to/where/output/goes/'    #Folder where .csv's are located
+plotdim <- c(9,5)                                      # Final Figure dimensions. Printed in R is not final dimensions so please check
+plotname <- 'Output_Plot.png'                          #Name the file. please include the type of file (.jpg .png, .svg). It will save in the same  Filefolder as input data.
+
+
+# >>>>>>>>>>>>>>>>>>>>>   Parameters for analysis <<<<<<<<<<<<<<<<<<<
+
+Process_Data <- TRUE   #If you are just finnicking with Plot parameters, set to FALSE to not have long wait period
+
 DigitsBelowZero <- 1      #Relevant if you want to round up to the nearest m/z i.e. 45, 45.0, 45.00, etc. Stick to 0-3, but even 3 requires a lot of RAM
 
 Relative_OrCounts <- 'relative'     #Unless you want counts, do relative
@@ -37,10 +44,9 @@ HorizontalSampleOffset <- 0.16      #How much (time) to shift each additional st
 TickTimeGap <- 1           #Time gap between x-axis ticks
 Legend_WrapAmount <- 20    #How many characters before Legend goes to new line
 
-
 LineColors <- c('black', 'black', 'black', 'black', 'black', 'black','black','black','black','black')    #Put in order of YourPlot variable. For pretty hexadecimals https://coolors.co/156064-00c49a-f8e16c-ffc2b4-fb8f67
 
-ChromLineWidth <- 0.4      #How wide do you want your line? 
+ChromLineWidth <- 0.4      #How wide do you want your chromatogram line(s)? 
 
 xaxesLabelSize <- 14
 yaxesLabelSize <- 14
@@ -51,9 +57,6 @@ LegendTextSize <- 12
 
 Plot_Border_Type <- "none" # Options: "none", "axes", "box". This will determine if you want a border/axes.
 BorderLineWidth <- 0.4     #Determines how thick of lines you want for axes/box.
-
-plotdim <- c(9,5)     # Final Figure dimensions. Printed in R is not final dimensions so please check
-
 
 ############################################################
 #                DO NOT EDIT BELOW THIS LINE               #
