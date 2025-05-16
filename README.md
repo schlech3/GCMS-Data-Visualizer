@@ -68,8 +68,7 @@ xrange <- c(7, 20)
 yrange <- c(0,1)
 
 ```
-
-OUTPUT____________
+![Alt text](https://github.com/schlech3/GCMS-Data-Visualizer/blob/main/Images/Example1_Stacked_TIC_DXSGGPPS_DXSGGPPS_CamTPS2.png)
 
 ### second plot
 
@@ -84,8 +83,7 @@ plotname <- 'Vert_TIC_DXSGGPPS_DXSGGPPS_CamTPS2.png'
 yrange <- c(0,1.3)
 ```
 
-OUTPUT____________
-
+![Alt text](https://github.com/schlech3/GCMS-Data-Visualizer/blob/main/Images/Example2_Vert_TIC_DXSGGPPS_DXSGGPPS_CamTPS2.png)
 
 Notice that the order of the listed plots in the YourPlot variable  matches the order of the colors and vertical offset you see? writing your variables in the correct order will ensure it pops up the way you wish. You can rearrange as you see fit, but if you change the xrange() values to be outside its initial scope or change the ion you wish to plot (TIC, which XIC etc.) or the +/- range for that value, you will need to reprocess everything. 
 
@@ -109,10 +107,7 @@ YourPlot <- tribble(~sample,       ~ion,           ~RANGE,   #Do not edit the  l
 )
 
 ```
-
-
-OUTPUT______________
-
+![Alt text](https://github.com/schlech3/GCMS-Data-Visualizer/blob/main/Images/Example3_Vert_257_2_DXSGGPPS_DXSGGPPS_CamTPS2.png)
 
 So in this case, we are now looking at exactly 257.2 aka +/- 0. we could adjust these values as we see fit. of note as well, if you don't care about having any decimal points, you could adjust DigitsBelowZero to be 0 or even expand it to have more accurate mass measurements. I would be careful of having too many digits below 0.
 
@@ -148,6 +143,9 @@ LineColors <- c('black', 'black', 'black', 'black', 'black', 'black','black','bl
 plotdim <- c(9,5)
 
 ```
+
+![Alt text](https://github.com/schlech3/GCMS-Data-Visualizer/blob/main/Images/Example4_VertHoriz_BKs.png)
+
 
 Hopefully these few examples gave some insight on some relevant use cases for this program
 
